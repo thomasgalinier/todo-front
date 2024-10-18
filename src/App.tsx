@@ -31,7 +31,22 @@ function App() {
         },
         []
     )
-
+    const doneTodo = (id) => {
+        fetch(`http://localhost:8080/todos/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ done: true }),
+        })
+            .then(() => setTodos(todos.map((todo) => {
+                if(todo.id === id) {
+                    todo.done = true;
+                }
+                return todo;
+            }))
+            );
+    }
   return (
     <>
         <div>
@@ -44,7 +59,7 @@ function App() {
         <ul style={{display: 'flex', flexDirection:'column', gap:'10px', justifyContent: "center"}}>
             {todos.map((todo) => (
                 <li style={{display:'flex', gap:'10px', alignItems: "center"}}>
-                    <input type="checkbox" checked={todo.done}/>
+                    <input type="checkbox" checked={todo.done} onClick={() =>doneTodo(todo.id)}/>
                 <div key={todo.id}>{todo.task}</div>
                     <button style={{backgroundColor:"red", color:'white'}} onClick={()=> deleteTodo(todo.id)}>Delete</button>
                 </li>
